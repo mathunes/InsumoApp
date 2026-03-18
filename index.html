@@ -3,78 +3,128 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>InsumoApp — Fluxo de Voz</title>
+<title>InsumoApp — Protótipo Completo</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;background:#eef2ef;display:flex;align-items:center;justify-content:center;padding:2rem}
 
 .device-wrap{display:flex;flex-direction:column;align-items:center;gap:14px}
 .device-label{font-size:11px;color:#8a9a8e;letter-spacing:0.07em;text-transform:uppercase}
-.phone{width:335px;height:690px;background:#fff;border-radius:40px;border:2px solid #cdd8cf;overflow:hidden;display:flex;flex-direction:column;position:relative;outline:8px solid #e4ece6}
+.phone{width:335px;height:700px;background:#fff;border-radius:40px;border:2px solid #cdd8cf;overflow:hidden;display:flex;flex-direction:column;position:relative;outline:8px solid #e4ece6}
 
 .screen{display:none;flex-direction:column;height:100%;width:100%}
 .screen.active{display:flex}
 
-/* topbar */
+/* ── TOPBAR ── */
 .topbar{display:flex;align-items:center;gap:8px;padding:14px 18px;border-bottom:1px solid #e8f0ea;background:#fff;flex-shrink:0}
 .topbar-title{font-size:15px;font-weight:600;color:#1a2e1e;flex:1}
+.icon-btn{width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:8px;border:none;background:none;flex-shrink:0}
+.icon-btn:hover{background:#f0f5f1}
 .back-btn{width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;background:none;border-radius:6px;flex-shrink:0}
 .back-btn:hover{background:#f0f5f1}
 
-.screen-body{flex:1;overflow-y:auto}
+/* ── SIDEBAR ── */
+.sidebar{position:absolute;top:0;left:-240px;width:240px;height:100%;background:#fff;border-right:1px solid #e8f0ea;z-index:20;transition:left 0.22s ease;display:flex;flex-direction:column}
+.sidebar.open{left:0}
+.overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.18);z-index:19;display:none}
+.overlay.open{display:block}
+.sb-head{padding:20px 16px 14px;border-bottom:1px solid #e8f0ea}
+.sb-av{width:42px;height:42px;border-radius:50%;background:#0F6E56;display:flex;align-items:center;justify-content:center;margin-bottom:9px}
+.sb-av span{color:#fff;font-size:14px;font-weight:600}
+.sb-name{font-size:14px;font-weight:600;color:#1a2e1e}
+.sb-role{font-size:11px;color:#6b8070;margin-top:2px}
+.sb-badge{display:inline-block;margin-top:5px;font-size:10px;padding:2px 8px;border-radius:99px;background:#d6f0e8;color:#085041;font-weight:600}
+.sb-nav{flex:1;padding:6px 0}
+.ni{display:flex;align-items:center;gap:10px;padding:12px 16px;font-size:13px;color:#6b8070;cursor:pointer;transition:background 0.1s}
+.ni:hover{background:#f4f8f5;color:#1a2e1e}
+.ni.active{color:#1a2e1e;font-weight:600;background:#eef5f0}
+.ni-icon{width:16px;height:16px;flex-shrink:0}
+.nd{height:1px;background:#e8f0ea;margin:4px 16px}
 
-/* step indicator */
-.steps-wrap{padding:16px 20px 0}
-.steps{display:flex;align-items:center}
-.step{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1}
-.step-dot{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;border:1.5px solid #cde0d6;color:#9ab8a4;background:#fff;transition:all 0.25s;flex-shrink:0}
-.step-dot.done{background:#0F6E56;border-color:#0F6E56;color:#fff}
-.step-dot.active{background:#fff;border-color:#0F6E56;color:#0F6E56}
-.step-label{font-size:9px;color:#9ab8a4;white-space:nowrap;font-weight:500;text-align:center}
-.step-label.active{color:#0F6E56;font-weight:600}
-.step-label.done{color:#6b8070}
-.step-line{height:1.5px;flex:1;background:#cde0d6;margin-bottom:14px;transition:background 0.25s}
-.step-line.done{background:#0F6E56}
+/* ── SCREEN BODY ── */
+.sb{flex:1;overflow-y:auto;padding:16px}
 
-/* ── ETAPA 1: GRAVAÇÃO ── */
-.voice-hero{display:flex;flex-direction:column;align-items:center;padding:18px 20px 10px}
-.voice-hint{font-size:12px;color:#6b8070;margin-bottom:20px;text-align:center;line-height:1.6}
-.mic-ring{width:110px;height:110px;border-radius:50%;border:2px solid #cde0d6;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:border-color 0.2s}
+/* ── NAV TABS ── */
+.nav-tabs{display:flex;border-top:1px solid #e8f0ea;background:#fff;flex-shrink:0}
+.tab-btn{flex:1;display:flex;flex-direction:column;align-items:center;padding:8px 4px;font-size:10px;color:#9aaa9e;cursor:pointer;border:none;background:none;gap:2px;font-family:inherit}
+.tab-btn.active{color:#0F6E56;font-weight:600}
+.ti{width:18px;height:18px}
+
+/* ── LOGIN ── */
+.login-body{flex:1;display:flex;flex-direction:column;justify-content:center;padding:28px 24px}
+.logo-w{width:52px;height:52px;border-radius:14px;background:#0F6E56;display:flex;align-items:center;justify-content:center;margin-bottom:20px}
+.login-title{font-size:22px;font-weight:700;color:#1a2e1e;margin-bottom:4px}
+.login-sub{font-size:12px;color:#6b8070;margin-bottom:28px;line-height:1.6}
+.fw{margin-bottom:13px}
+.fl{font-size:11px;color:#5a7060;margin-bottom:4px;font-weight:600}
+.fi{width:100%;padding:11px 12px;font-size:13px;border:1px solid #d0ddd3;border-radius:9px;background:#fff;color:#1a2e1e;outline:none;font-family:inherit}
+.fi:focus{border-color:#0F6E56;box-shadow:0 0 0 3px rgba(15,110,86,0.08)}
+.lb{width:100%;padding:12px;font-size:14px;font-weight:700;background:#0F6E56;color:#fff;border:none;border-radius:9px;cursor:pointer;font-family:inherit;margin-top:4px}
+.lb:hover{background:#085041}
+
+/* ── DASHBOARD ── */
+.metric-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.mc{background:#f4f8f5;border-radius:10px;padding:11px 13px;border:1px solid #e4ede6}
+.ml{font-size:11px;color:#6b8070;margin-bottom:3px}
+.mv{font-size:22px;font-weight:700;color:#1a2e1e}
+.ms{font-size:11px;margin-top:2px}
+.recent-label{font-size:12px;font-weight:700;color:#1a2e1e;margin-bottom:8px}
+.ri{display:flex;align-items:center;gap:10px;padding:9px 12px;border-bottom:1px solid #f0f5f1}
+.ri:last-child{border-bottom:none}
+.ri-icon{width:32px;height:32px;border-radius:8px;background:#e4f5ee;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ri-name{font-size:13px;font-weight:500;color:#1a2e1e}
+.ri-meta{font-size:11px;color:#9aaa9e;margin-top:1px}
+.ri-qty{font-size:13px;font-weight:600;color:#1a2e1e;margin-left:auto;white-space:nowrap}
+
+/* ── MIC (dashboard) ── */
+.mic-section{display:flex;flex-direction:column;align-items:center;padding:16px 16px 10px}
+.mic-hint{font-size:12px;color:#6b8070;margin-bottom:18px;text-align:center;line-height:1.6}
+.mic-ring{width:108px;height:108px;border-radius:50%;border:2px solid #cde0d6;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:border-color 0.2s}
 .mic-ring:hover{border-color:#0F6E56}
 .mic-ring.rec{border-color:#d63b3b;animation:pulse 1.1s infinite}
 @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(214,59,59,0.2)}50%{box-shadow:0 0 0 14px rgba(214,59,59,0)}}
-.mic-inner{width:78px;height:78px;border-radius:50%;background:#0F6E56;display:flex;align-items:center;justify-content:center;transition:background 0.2s;box-shadow:0 4px 18px rgba(15,110,86,0.25)}
+.mic-inner{width:76px;height:76px;border-radius:50%;background:#0F6E56;display:flex;align-items:center;justify-content:center;transition:background 0.2s;box-shadow:0 4px 18px rgba(15,110,86,0.25)}
 .mic-inner.rec{background:#d63b3b;box-shadow:0 4px 18px rgba(214,59,59,0.25)}
-.mic-status{font-size:13px;margin-top:14px;font-weight:600;color:#6b8070;text-align:center}
+.mic-status{font-size:13px;margin-top:13px;font-weight:600;color:#6b8070;text-align:center}
 .mic-status.rec{color:#d63b3b}
 .mic-timer{font-size:12px;color:#9aaa9e;margin-top:4px;height:18px;text-align:center}
-.wave-bars{display:flex;align-items:center;gap:3px;height:26px;margin-top:8px}
+.wave-bars{display:flex;align-items:center;gap:3px;height:24px;margin-top:6px}
 .wave-bars.hidden{visibility:hidden}
 .bar{width:3px;border-radius:2px;background:#d63b3b;animation:wave 0.8s ease-in-out infinite}
 .bar:nth-child(1){height:6px;animation-delay:0s}
 .bar:nth-child(2){height:14px;animation-delay:0.1s}
-.bar:nth-child(3){height:22px;animation-delay:0.2s}
+.bar:nth-child(3){height:20px;animation-delay:0.2s}
 .bar:nth-child(4){height:14px;animation-delay:0.3s}
 .bar:nth-child(5){height:8px;animation-delay:0.4s}
 .bar:nth-child(6){height:18px;animation-delay:0.15s}
 .bar:nth-child(7){height:10px;animation-delay:0.25s}
 @keyframes wave{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.6)}}
 .stop-hint{font-size:11px;color:#d63b3b;margin-top:6px;font-weight:500;text-align:center;height:16px}
-.or-div{display:flex;align-items:center;gap:10px;margin:10px 20px}
+.or-div{display:flex;align-items:center;gap:10px;margin:8px 0}
 .or-line{flex:1;height:1px;background:#e8f0ea}
 .or-text{font-size:11px;color:#9aaa9e}
-.manual-btn{margin:0 20px 14px;padding:10px;font-size:12px;color:#0F6E56;border:1px solid #b8dace;background:#f4faf7;border-radius:9px;cursor:pointer;font-family:inherit;width:calc(100% - 40px);font-weight:500}
+.manual-btn{width:100%;padding:10px;font-size:12px;color:#0F6E56;border:1px solid #b8dace;background:#f4faf7;border-radius:9px;cursor:pointer;font-family:inherit;font-weight:600;margin-bottom:14px}
 .manual-btn:hover{background:#e4f5ee}
-.examples-card{margin:0 20px;padding:12px 14px;background:#f4f8f5;border:1px solid #e4ede6;border-radius:10px}
-.examples-label{font-size:10px;font-weight:700;color:#6b8070;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.06em}
-.examples-text{font-size:12px;color:#1a2e1e;line-height:1.9;font-style:italic}
 
-/* ── ETAPA 2: PROCESSAMENTO ── */
+/* ── STEP INDICATOR ── */
+.steps-wrap{padding:14px 20px 0}
+.steps{display:flex;align-items:center}
+.step{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1}
+.step-dot{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;border:1.5px solid #cde0d6;color:#9ab8a4;background:#fff;transition:all 0.25s;flex-shrink:0}
+.step-dot.done{background:#0F6E56;border-color:#0F6E56;color:#fff}
+.step-dot.active{background:#fff;border-color:#0F6E56;color:#0F6E56}
+.step-lbl{font-size:9px;color:#9ab8a4;white-space:nowrap;font-weight:500;text-align:center}
+.step-lbl.active{color:#0F6E56;font-weight:700}
+.step-lbl.done{color:#6b8070}
+.step-line{height:1.5px;flex:1;background:#cde0d6;margin-bottom:14px;transition:background 0.25s}
+.step-line.done{background:#0F6E56}
+
+/* ── PROCESSAMENTO ── */
 .proc-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center}
 .proc-icon{width:66px;height:66px;border-radius:50%;background:#fff8ec;border:2px solid #f0d898;display:flex;align-items:center;justify-content:center;margin-bottom:16px}
 .proc-title{font-size:15px;font-weight:700;color:#1a2e1e;margin-bottom:6px}
 .proc-sub{font-size:12px;color:#6b8070;line-height:1.6;max-width:220px;margin-bottom:20px}
-.proc-transcript{background:#f4f8f5;border:1px solid #e0eae2;border-radius:10px;padding:12px 14px;width:100%;text-align:left;margin-bottom:20px;min-height:64px}
+.proc-transcript{background:#f4f8f5;border:1px solid #e0eae2;border-radius:10px;padding:12px 14px;width:100%;text-align:left;margin-bottom:20px;min-height:66px}
 .proc-transcript-label{font-size:10px;color:#9aaa9e;margin-bottom:5px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em}
 .proc-transcript-text{font-size:13px;color:#1a2e1e;font-style:italic;line-height:1.5}
 .dots{display:flex;gap:6px;justify-content:center}
@@ -83,7 +133,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-heig
 .dot:nth-child(3){animation-delay:0.4s}
 @keyframes dotpulse{0%,80%,100%{opacity:0.3;transform:scale(0.8)}40%{opacity:1;transform:scale(1)}}
 
-/* ── ETAPA 3: CONFIRMAÇÃO ── */
+/* ── CONFIRMAÇÃO ── */
 .sug-wrap{padding:14px}
 .sug-card{border:1px solid #d8e8dc;border-radius:13px;overflow:hidden;background:#fff;margin-bottom:12px}
 .sug-head{padding:12px 14px;background:#f4f8f5;border-bottom:1px solid #e4ede6}
@@ -97,16 +147,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-heig
 .sf{margin-bottom:12px}
 .sfl{font-size:11px;color:#6b8070;margin-bottom:4px;font-weight:600}
 .sv{font-size:14px;font-weight:600;color:#1a2e1e;padding:9px 11px;border:1px solid #e0eae2;border-radius:8px;background:#f9fbf9;display:flex;align-items:center;justify-content:space-between}
-.sv-edit{font-size:10px;color:#0F6E56;cursor:pointer;font-weight:600;border:none;background:none;font-family:inherit;padding:0}
-.sv-edit:hover{text-decoration:underline}
+.sv-edit{font-size:10px;color:#0F6E56;cursor:pointer;font-weight:600;border:none;background:none;font-family:inherit}
 .qty-row{display:flex;align-items:center;gap:8px}
 .qty-btn{width:34px;height:34px;border-radius:8px;border:1px solid #d0ddd3;background:#fff;color:#1a2e1e;font-size:18px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1}
 .qty-btn:hover{background:#f0f5f1}
 .qty-input{flex:1;padding:8px 10px;font-size:16px;font-weight:700;border:1px solid #d0ddd3;border-radius:8px;background:#fff;color:#1a2e1e;font-family:inherit;outline:none;text-align:center}
-.qty-input:focus{border-color:#0F6E56;box-shadow:0 0 0 3px rgba(15,110,86,0.08)}
+.qty-input:focus{border-color:#0F6E56}
 .qty-unit{font-size:12px;color:#9aaa9e;flex-shrink:0}
 .obs-input{width:100%;padding:9px 11px;font-size:12px;border:1px solid #d0ddd3;border-radius:8px;background:#fff;color:#1a2e1e;font-family:inherit;outline:none}
-.obs-input:focus{border-color:#0F6E56;box-shadow:0 0 0 3px rgba(15,110,86,0.08)}
+.obs-input:focus{border-color:#0F6E56}
 .warn-box{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:#fff8ec;border:1px solid #f0d898;border-radius:9px;margin-bottom:14px}
 .warn-text{font-size:11px;color:#7a5a10;line-height:1.5}
 .btn-row{display:flex;gap:8px}
@@ -122,7 +171,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-heig
 .tv{color:#1a2e1e;font-weight:500}
 .tv-ok{color:#0F6E56;font-weight:600}
 
-/* ── ETAPA 4: SUCESSO ── */
+/* ── SUCESSO ── */
 .success-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 24px;text-align:center}
 .suc-circle{width:72px;height:72px;border-radius:50%;background:#d6f0e8;display:flex;align-items:center;justify-content:center;margin-bottom:16px}
 .suc-title{font-size:17px;font-weight:700;color:#1a2e1e;margin-bottom:6px}
@@ -136,47 +185,110 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-heig
 .suc-btn{padding:12px;font-size:13px;font-weight:700;background:#0F6E56;color:#fff;border:none;border-radius:9px;cursor:pointer;font-family:inherit;width:100%;margin-bottom:8px}
 .suc-btn:hover{background:#085041}
 .suc-link{font-size:12px;color:#0F6E56;border:none;background:none;cursor:pointer;font-family:inherit;font-weight:600}
-.suc-link:hover{text-decoration:underline}
+
+/* ── HISTÓRICO ── */
+.hf{display:flex;gap:6px;padding:12px 16px 4px;overflow-x:auto;flex-shrink:0}
+.pill{padding:4px 11px;border-radius:99px;font-size:11px;cursor:pointer;white-space:nowrap;border:1px solid #d8e8dc;background:#f4f8f5;color:#6b8070;font-weight:500}
+.pill.active{background:#0F6E56;color:#fff;border-color:#0F6E56}
+.hl{padding:6px 16px}
+.hi{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid #f0f5f1}
+.hi:last-child{border-bottom:none}
+.hi-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:700}
+.hi-name{font-size:13px;font-weight:600;color:#1a2e1e}
+.hi-meta{font-size:11px;color:#9aaa9e;margin-top:2px}
+.hbadge{font-size:10px;padding:2px 7px;border-radius:99px;margin-top:3px;display:inline-block;font-weight:600}
+.bv{background:#d6f0e8;color:#085041}
+.bm{background:#dceeff;color:#185FA5}
+.be{background:#fdf0d4;color:#7a5a10}
+.hr-col{text-align:right}
+.hq{font-size:13px;font-weight:700;color:#1a2e1e}
+.ht{font-size:10px;color:#9aaa9e;margin-top:2px}
+
+/* ── INSUMOS ── */
+.prod-search{margin:12px 16px 6px;padding:9px 12px;font-size:13px;border:1px solid #d0ddd3;border-radius:9px;background:#f4f8f5;color:#1a2e1e;outline:none;font-family:inherit;width:calc(100% - 32px)}
+.prod-search:focus{border-color:#0F6E56}
+.pc{display:flex;gap:6px;padding:0 16px 10px;overflow-x:auto;flex-shrink:0}
+.pl{padding:0 16px}
+.pi{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #f0f5f1}
+.pi:last-child{border-bottom:none}
+.pdot{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:700}
+.pn{font-size:13px;font-weight:600;color:#1a2e1e}
+.pcat{font-size:11px;color:#9aaa9e;margin-top:1px}
+.pstock{font-size:13px;font-weight:700;color:#1a2e1e}
+.ps-ok{color:#0F6E56;font-size:10px;margin-top:1px;font-weight:600}
+.ps-low{color:#c47d10;font-size:10px;margin-top:1px;font-weight:600}
+.ret-btn{font-size:11px;padding:5px 10px;border-radius:7px;border:1px solid #0F6E56;color:#0F6E56;background:none;cursor:pointer;font-family:inherit;font-weight:600;margin-top:4px}
+.ret-btn:hover{background:#e4f5ee}
 </style>
 </head>
 <body>
 
 <div class="device-wrap">
-  <div class="device-label">InsumoApp — Fluxo de Baixa por Voz</div>
+  <div class="device-label">InsumoApp — Protótipo Completo</div>
   <div class="phone">
 
-    <!-- ETAPA 1: GRAVAÇÃO -->
-    <div class="screen active" id="screen-voz">
-      <div class="topbar">
-        <button class="back-btn" title="Voltar ao dashboard">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="#1a2e1e" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-        <span class="topbar-title">Registrar retirada</span>
+    <!-- ═══ SIDEBAR (global) ═══ -->
+    <div class="sidebar" id="sidebar">
+      <div class="sb-head">
+        <div class="sb-av"><span>MA</span></div>
+        <div class="sb-name">Maria Alves</div>
+        <div class="sb-role">Usuário autorizado</div>
+        <span class="sb-badge">Farmácia Central</span>
       </div>
-
-      <div class="steps-wrap">
-        <div class="steps">
-          <div class="step"><div class="step-dot active" id="sd1">1</div><div class="step-label active" id="sl1">Gravação</div></div>
-          <div class="step-line" id="line1"></div>
-          <div class="step"><div class="step-dot" id="sd2">2</div><div class="step-label" id="sl2">Processamento</div></div>
-          <div class="step-line" id="line2"></div>
-          <div class="step"><div class="step-dot" id="sd3">3</div><div class="step-label" id="sl3">Confirmação</div></div>
-          <div class="step-line" id="line3"></div>
-          <div class="step"><div class="step-dot" id="sd4">4</div><div class="step-label" id="sl4">Concluído</div></div>
+      <nav class="sb-nav">
+        <div class="ni" id="sbn-dashboard" onclick="navTo('dashboard')">
+          <svg class="ni-icon" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="9" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="2" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="9" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.2"/></svg>
+          Início
         </div>
-      </div>
+        <div class="ni" id="sbn-historico" onclick="navTo('historico')">
+          <svg class="ni-icon" viewBox="0 0 16 16" fill="none"><path d="M8 4v4l2.5 2.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><circle cx="8" cy="8" r="5.5" stroke="currentColor" stroke-width="1.2"/></svg>
+          Histórico de retiradas
+        </div>
+        <div class="ni" id="sbn-produtos" onclick="navTo('produtos')">
+          <svg class="ni-icon" viewBox="0 0 16 16" fill="none"><path d="M2 5l6-3 6 3v6l-6 3-6-3V5z" stroke="currentColor" stroke-width="1.2"/><path d="M8 2v12M2 5l6 3 6-3" stroke="currentColor" stroke-width="1.2"/></svg>
+          Insumos
+        </div>
+        <div class="nd"></div>
+        <div class="ni" onclick="navTo('login')">
+          <svg class="ni-icon" viewBox="0 0 16 16" fill="none"><path d="M6 3H3a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M10 11l3-3-3-3M13 8H6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Sair
+        </div>
+      </nav>
+    </div>
+    <div class="overlay" id="overlay" onclick="closeSB()"></div>
 
-      <div class="screen-body" style="padding:0">
-        <div class="voice-hero">
-          <div class="voice-hint" id="voiceHint">Pressione o botão e fale o nome do insumo e a quantidade retirada.</div>
+    <!-- ═══ LOGIN ═══ -->
+    <div class="screen active" id="screen-login">
+      <div class="login-body">
+        <div class="logo-w">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M12 3L4 7v5c0 5 3.5 9.7 8 11 4.5-1.3 8-6 8-11V7L12 3z" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="login-title">Acesso seguro</div>
+        <div class="login-sub">Registro de retiradas de insumos hospitalares. Apenas usuários autorizados.</div>
+        <div class="fw"><div class="fl">Matrícula ou e-mail</div><input class="fi" type="text" placeholder="ex: 00123 ou nome@hospital.com"/></div>
+        <div class="fw"><div class="fl">Senha</div><input class="fi" type="password" placeholder="••••••••"/></div>
+        <button class="lb" onclick="navTo('dashboard')">Entrar</button>
+      </div>
+    </div>
+
+    <!-- ═══ DASHBOARD ═══ -->
+    <div class="screen" id="screen-dashboard">
+      <div class="topbar">
+        <span class="topbar-title">InsumoApp</span>
+        <button class="icon-btn" onclick="toggleSB('dashboard')">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M2 8h12M2 12h12" stroke="#1a2e1e" stroke-width="1.4" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <div class="sb">
+        <div class="metric-row">
+          <div class="mc"><div class="ml">Retiradas hoje</div><div class="mv">14</div><div class="ms" style="color:#0F6E56">+3 na última hora</div></div>
+          <div class="mc"><div class="ml">Saldo baixo</div><div class="mv">3</div><div class="ms" style="color:#c47d10">Atenção necessária</div></div>
+        </div>
+        <div class="mic-section">
+          <div class="mic-hint">Pressione o botão e fale o nome do insumo e a quantidade retirada.</div>
           <div class="mic-ring" id="micRing" onclick="toggleRec()">
             <div class="mic-inner" id="micInner">
-              <svg width="30" height="30" viewBox="0 0 24 24" fill="none">
-                <rect x="9" y="2" width="6" height="11" rx="3" stroke="#fff" stroke-width="1.5"/>
-                <path d="M5 11a7 7 0 0 0 14 0" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
-                <line x1="12" y1="18" x2="12" y2="22" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
-                <line x1="9" y1="22" x2="15" y2="22" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
-              </svg>
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><rect x="9" y="2" width="6" height="11" rx="3" stroke="#fff" stroke-width="1.5"/><path d="M5 11a7 7 0 0 0 14 0" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/><line x1="12" y1="18" x2="12" y2="22" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/><line x1="9" y1="22" x2="15" y2="22" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg>
             </div>
           </div>
           <div class="mic-status" id="micStatus">Toque para iniciar</div>
@@ -187,36 +299,48 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-heig
           </div>
           <div class="stop-hint" id="stopHint"></div>
         </div>
-
         <div class="or-div"><div class="or-line"></div><span class="or-text">ou registre manualmente</span><div class="or-line"></div></div>
-        <button class="manual-btn" onclick="goStep('confirmacao')">Buscar insumo na lista</button>
-
-        <div class="examples-card">
-          <div class="examples-label">Exemplos de comando de voz</div>
-          <div class="examples-text">
-            "Luva cirúrgica tamanho P, dez unidades"<br>
-            "Seringa de dez ml, cinco unidades"<br>
-            "Curativo dez por dez, três peças"
+        <button class="manual-btn" onclick="navTo('produtos')">Buscar insumo na lista</button>
+        <div class="recent-label">Últimas retiradas</div>
+        <div style="border:1px solid #e4ede6;border-radius:11px;overflow:hidden">
+          <div class="ri">
+            <div class="ri-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 2h6l1 4H8L9 2z" stroke="#0F6E56" stroke-width="1.3"/><rect x="4" y="6" width="16" height="14" rx="2" stroke="#0F6E56" stroke-width="1.3"/></svg></div>
+            <div><div class="ri-name">Luva cirúrgica P</div><div class="ri-meta">09:42 · voz · confirmado</div></div>
+            <div class="ri-qty">10 un</div>
+          </div>
+          <div class="ri">
+            <div class="ri-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 2h6l1 4H8L9 2z" stroke="#0F6E56" stroke-width="1.3"/><rect x="4" y="6" width="16" height="14" rx="2" stroke="#0F6E56" stroke-width="1.3"/></svg></div>
+            <div><div class="ri-name">Seringa 10ml</div><div class="ri-meta">08:55 · manual · confirmado</div></div>
+            <div class="ri-qty">5 un</div>
           </div>
         </div>
       </div>
+      <div class="nav-tabs">
+        <button class="tab-btn active" onclick="navTo('dashboard')"><svg class="ti" viewBox="0 0 18 18" fill="none"><rect x="2" y="2" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="10" y="2" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="2" y="10" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="10" y="10" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/></svg>Início</button>
+        <button class="tab-btn" onclick="navTo('historico')"><svg class="ti" viewBox="0 0 18 18" fill="none"><path d="M9 5v4l2.5 2.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="9" cy="9" r="6.5" stroke="currentColor" stroke-width="1.3"/></svg>Histórico</button>
+        <button class="tab-btn" onclick="navTo('produtos')"><svg class="ti" viewBox="0 0 18 18" fill="none"><path d="M9 2L2 5.5v7L9 16l7-3.5v-7L9 2z" stroke="currentColor" stroke-width="1.3"/></svg>Insumos</button>
+      </div>
     </div>
 
-    <!-- ETAPA 2: PROCESSAMENTO -->
+    <!-- ═══ PROCESSAMENTO ═══ -->
     <div class="screen" id="screen-processing">
       <div class="topbar">
-        <button class="back-btn" onclick="goStep('voz')">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="#1a2e1e" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
+        <button class="back-btn" onclick="navTo('dashboard')"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="#1a2e1e" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         <span class="topbar-title">Processando áudio</span>
       </div>
-      <div class="proc-body">
-        <div class="proc-icon">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-            <path d="M12 2a10 10 0 1 0 10 10" stroke="#c47d10" stroke-width="1.8" stroke-linecap="round"/>
-            <path d="M12 6v6l4 2" stroke="#c47d10" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
+      <div class="steps-wrap">
+        <div class="steps">
+          <div class="step"><div class="step-dot done" id="sd1">✓</div><div class="step-lbl done" id="sl1">Gravação</div></div>
+          <div class="step-line done" id="line1"></div>
+          <div class="step"><div class="step-dot active" id="sd2">2</div><div class="step-lbl active" id="sl2">Processamento</div></div>
+          <div class="step-line" id="line2"></div>
+          <div class="step"><div class="step-dot" id="sd3">3</div><div class="step-lbl" id="sl3">Confirmação</div></div>
+          <div class="step-line" id="line3"></div>
+          <div class="step"><div class="step-dot" id="sd4">4</div><div class="step-lbl" id="sl4">Concluído</div></div>
         </div>
+      </div>
+      <div class="proc-body">
+        <div class="proc-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M12 2a10 10 0 1 0 10 10" stroke="#c47d10" stroke-width="1.8" stroke-linecap="round"/><path d="M12 6v6l4 2" stroke="#c47d10" stroke-width="1.5" stroke-linecap="round"/></svg></div>
         <div class="proc-title">Analisando gravação…</div>
         <div class="proc-sub">O áudio está sendo convertido em texto e interpretado pelo sistema de reconhecimento.</div>
         <div class="proc-transcript">
@@ -227,13 +351,22 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-heig
       </div>
     </div>
 
-    <!-- ETAPA 3: CONFIRMAÇÃO -->
+    <!-- ═══ CONFIRMAÇÃO ═══ -->
     <div class="screen" id="screen-confirmacao">
       <div class="topbar">
-        <button class="back-btn" onclick="goStep('voz')">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="#1a2e1e" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
+        <button class="back-btn" onclick="navTo('dashboard')"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="#1a2e1e" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         <span class="topbar-title">Confirmar retirada</span>
+      </div>
+      <div class="steps-wrap">
+        <div class="steps">
+          <div class="step"><div class="step-dot done">✓</div><div class="step-lbl done">Gravação</div></div>
+          <div class="step-line done"></div>
+          <div class="step"><div class="step-dot done">✓</div><div class="step-lbl done">Processamento</div></div>
+          <div class="step-line done"></div>
+          <div class="step"><div class="step-dot active">3</div><div class="step-lbl active">Confirmação</div></div>
+          <div class="step-line"></div>
+          <div class="step"><div class="step-dot">4</div><div class="step-lbl">Concluído</div></div>
+        </div>
       </div>
       <div class="screen-body" style="padding:0">
         <div class="sug-wrap">
@@ -251,10 +384,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-heig
             <div class="sug-body">
               <div class="sf">
                 <div class="sfl">Insumo identificado</div>
-                <div class="sv">
-                  <span>Luva cirúrgica P</span>
-                  <button class="sv-edit">Alterar</button>
-                </div>
+                <div class="sv"><span>Luva cirúrgica P</span><button class="sv-edit">Alterar</button></div>
               </div>
               <div class="sf">
                 <div class="sfl">Quantidade — ajuste se necessário</div>
@@ -270,19 +400,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-heig
                 <input class="obs-input" type="text" placeholder="ex: uso em procedimento de urgência"/>
               </div>
               <div class="warn-box">
-                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;margin-top:1px">
-                  <circle cx="8" cy="8" r="6.5" stroke="#c47d10" stroke-width="1.2"/>
-                  <path d="M8 5v4M8 11v.5" stroke="#c47d10" stroke-width="1.3" stroke-linecap="round"/>
-                </svg>
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;margin-top:1px"><circle cx="8" cy="8" r="6.5" stroke="#c47d10" stroke-width="1.2"/><path d="M8 5v4M8 11v.5" stroke="#c47d10" stroke-width="1.3" stroke-linecap="round"/></svg>
                 <div class="warn-text">Confira os dados antes de confirmar. O registro será vinculado ao seu usuário, com data, hora e áudio original salvos para auditoria.</div>
               </div>
               <div class="btn-row">
-                <button class="bc" onclick="goStep('voz')">Cancelar</button>
-                <button class="bco" onclick="goStep('sucesso')">Confirmar retirada</button>
+                <button class="bc" onclick="navTo('dashboard')">Cancelar</button>
+                <button class="bco" onclick="navTo('sucesso')">Confirmar retirada</button>
               </div>
             </div>
           </div>
-
           <div class="trace-card">
             <div class="trace-title">Rastreabilidade do registro</div>
             <div class="tr"><span class="tk">Usuário</span><span class="tv">Maria Alves</span></div>
@@ -295,18 +421,25 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-heig
       </div>
     </div>
 
-    <!-- ETAPA 4: SUCESSO -->
+    <!-- ═══ SUCESSO ═══ -->
     <div class="screen" id="screen-sucesso">
       <div class="topbar">
         <span style="width:28px"></span>
         <span class="topbar-title">Retirada registrada</span>
       </div>
-      <div class="success-body">
-        <div class="suc-circle">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-            <path d="M5 12l5 5L19 7" stroke="#0F6E56" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
+      <div class="steps-wrap">
+        <div class="steps">
+          <div class="step"><div class="step-dot done">✓</div><div class="step-lbl done">Gravação</div></div>
+          <div class="step-line done"></div>
+          <div class="step"><div class="step-dot done">✓</div><div class="step-lbl done">Processamento</div></div>
+          <div class="step-line done"></div>
+          <div class="step"><div class="step-dot done">✓</div><div class="step-lbl done">Confirmação</div></div>
+          <div class="step-line done"></div>
+          <div class="step"><div class="step-dot done">✓</div><div class="step-lbl done">Concluído</div></div>
         </div>
+      </div>
+      <div class="success-body">
+        <div class="suc-circle"><svg width="32" height="32" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L19 7" stroke="#0F6E56" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <div class="suc-title">Baixa registrada com sucesso</div>
         <div class="suc-sub">A retirada foi salva com rastreabilidade completa no sistema.</div>
         <div class="suc-meta" id="sucMeta"></div>
@@ -317,26 +450,83 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-heig
           <div class="suc-recap-row"><span class="srk">Método</span><span class="srv">Reconhecimento de voz</span></div>
           <div class="suc-recap-row"><span class="srk">Transcrição / áudio</span><span class="srv" style="color:#0F6E56">Arquivados</span></div>
         </div>
-        <button class="suc-btn" onclick="goStep('voz')">Registrar nova retirada</button>
-        <button class="suc-link">Ver histórico de retiradas</button>
+        <button class="suc-btn" onclick="navTo('dashboard')">Registrar nova retirada</button>
+        <button class="suc-link" onclick="navTo('historico')">Ver histórico de retiradas</button>
+      </div>
+    </div>
+
+    <!-- ═══ HISTÓRICO ═══ -->
+    <div class="screen" id="screen-historico">
+      <div class="topbar">
+        <span class="topbar-title">InsumoApp</span>
+        <button class="icon-btn" onclick="toggleSB('historico')"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M2 8h12M2 12h12" stroke="#1a2e1e" stroke-width="1.4" stroke-linecap="round"/></svg></button>
+      </div>
+      <div class="hf">
+        <span class="pill active">Todas</span>
+        <span class="pill">Hoje</span>
+        <span class="pill">Por voz</span>
+        <span class="pill">Manual</span>
+      </div>
+      <div class="sb" style="padding:6px 0">
+        <div class="hl">
+          <div class="hi"><div class="hi-icon" style="background:#d6f0e8;color:#085041">LV</div><div style="flex:1"><div class="hi-name">Luva cirúrgica P</div><div class="hi-meta">Maria Alves · Farmácia Central</div><span class="hbadge bv">voz</span></div><div class="hr-col"><div class="hq">10 un</div><div class="ht">hoje 09:42</div></div></div>
+          <div class="hi"><div class="hi-icon" style="background:#dceeff;color:#185FA5">SR</div><div style="flex:1"><div class="hi-name">Seringa 10ml</div><div class="hi-meta">Maria Alves · Farmácia Central</div><span class="hbadge bm">manual</span></div><div class="hr-col"><div class="hq">5 un</div><div class="ht">hoje 08:55</div></div></div>
+          <div class="hi"><div class="hi-icon" style="background:#fdf0d4;color:#7a5a10">CU</div><div style="flex:1"><div class="hi-name">Curativo 10x10</div><div class="hi-meta">Maria Alves · Farmácia Central</div><span class="hbadge be">voz · corrigido</span></div><div class="hr-col"><div class="hq">3 un</div><div class="ht">ontem 16:30</div></div></div>
+          <div class="hi"><div class="hi-icon" style="background:#d6f0e8;color:#085041">AG</div><div style="flex:1"><div class="hi-name">Agulha 25x8</div><div class="hi-meta">Maria Alves · Farmácia Central</div><span class="hbadge bv">voz</span></div><div class="hr-col"><div class="hq">20 un</div><div class="ht">ontem 14:10</div></div></div>
+          <div class="hi"><div class="hi-icon" style="background:#dceeff;color:#185FA5">ES</div><div style="flex:1"><div class="hi-name">Esparadrapo 10m</div><div class="hi-meta">Maria Alves · Farmácia Central</div><span class="hbadge bm">manual</span></div><div class="hr-col"><div class="hq">2 un</div><div class="ht">ontem 11:05</div></div></div>
+        </div>
+      </div>
+      <div class="nav-tabs">
+        <button class="tab-btn" onclick="navTo('dashboard')"><svg class="ti" viewBox="0 0 18 18" fill="none"><rect x="2" y="2" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="10" y="2" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="2" y="10" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="10" y="10" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/></svg>Início</button>
+        <button class="tab-btn active" onclick="navTo('historico')"><svg class="ti" viewBox="0 0 18 18" fill="none"><path d="M9 5v4l2.5 2.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="9" cy="9" r="6.5" stroke="currentColor" stroke-width="1.3"/></svg>Histórico</button>
+        <button class="tab-btn" onclick="navTo('produtos')"><svg class="ti" viewBox="0 0 18 18" fill="none"><path d="M9 2L2 5.5v7L9 16l7-3.5v-7L9 2z" stroke="currentColor" stroke-width="1.3"/></svg>Insumos</button>
+      </div>
+    </div>
+
+    <!-- ═══ INSUMOS ═══ -->
+    <div class="screen" id="screen-produtos">
+      <div class="topbar">
+        <span class="topbar-title">InsumoApp</span>
+        <button class="icon-btn" onclick="toggleSB('produtos')"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M2 8h12M2 12h12" stroke="#1a2e1e" stroke-width="1.4" stroke-linecap="round"/></svg></button>
+      </div>
+      <input class="prod-search" type="search" placeholder="Buscar insumo..."/>
+      <div class="pc">
+        <span class="pill active">Todos</span>
+        <span class="pill">Curativos</span>
+        <span class="pill">Injeção</span>
+        <span class="pill">Proteção</span>
+        <span class="pill">Outros</span>
+      </div>
+      <div class="sb" style="padding:0 0 12px">
+        <div class="pl">
+          <div class="pi"><div class="pdot" style="background:#d6f0e8;color:#085041">LV</div><div style="flex:1"><div class="pn">Luva cirúrgica P</div><div class="pcat">Proteção · cx c/100</div></div><div style="text-align:right"><div class="pstock">340 un</div><div class="ps-ok">Em estoque</div><button class="ret-btn" onclick="navTo('confirmacao')">Retirar</button></div></div>
+          <div class="pi"><div class="pdot" style="background:#dceeff;color:#185FA5">SR</div><div style="flex:1"><div class="pn">Seringa 10ml</div><div class="pcat">Injeção · unidade</div></div><div style="text-align:right"><div class="pstock">82 un</div><div class="ps-low">Estoque baixo</div><button class="ret-btn" onclick="navTo('confirmacao')">Retirar</button></div></div>
+          <div class="pi"><div class="pdot" style="background:#fdf0d4;color:#7a5a10">CU</div><div style="flex:1"><div class="pn">Curativo 10x10</div><div class="pcat">Curativos · pct c/10</div></div><div style="text-align:right"><div class="pstock">210 un</div><div class="ps-ok">Em estoque</div><button class="ret-btn" onclick="navTo('confirmacao')">Retirar</button></div></div>
+          <div class="pi"><div class="pdot" style="background:#ede8fe;color:#3C3489">AG</div><div style="flex:1"><div class="pn">Agulha 25x8</div><div class="pcat">Injeção · cx c/100</div></div><div style="text-align:right"><div class="pstock">18 un</div><div class="ps-low">Estoque baixo</div><button class="ret-btn" onclick="navTo('confirmacao')">Retirar</button></div></div>
+          <div class="pi"><div class="pdot" style="background:#e4f0d8;color:#27500A">ES</div><div style="flex:1"><div class="pn">Esparadrapo 10m</div><div class="pcat">Curativos · rolo</div></div><div style="text-align:right"><div class="pstock">55 un</div><div class="ps-ok">Em estoque</div><button class="ret-btn" onclick="navTo('confirmacao')">Retirar</button></div></div>
+        </div>
+      </div>
+      <div class="nav-tabs">
+        <button class="tab-btn" onclick="navTo('dashboard')"><svg class="ti" viewBox="0 0 18 18" fill="none"><rect x="2" y="2" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="10" y="2" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="2" y="10" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="10" y="10" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/></svg>Início</button>
+        <button class="tab-btn" onclick="navTo('historico')"><svg class="ti" viewBox="0 0 18 18" fill="none"><path d="M9 5v4l2.5 2.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="9" cy="9" r="6.5" stroke="currentColor" stroke-width="1.3"/></svg>Histórico</button>
+        <button class="tab-btn active" onclick="navTo('produtos')"><svg class="ti" viewBox="0 0 18 18" fill="none"><path d="M9 2L2 5.5v7L9 16l7-3.5v-7L9 2z" stroke="currentColor" stroke-width="1.3"/></svg>Insumos</button>
       </div>
     </div>
 
   </div>
-  <div class="device-label" style="font-size:10px">toque no microfone para simular o fluxo completo</div>
+  <div class="device-label" style="font-size:10px">entre com qualquer credencial · toque no microfone para simular o fluxo de voz</div>
 </div>
 
 <script>
-const ORDER = ['voz','processing','confirmacao','sucesso'];
+const SCREENS = ['login','dashboard','processing','confirmacao','sucesso','historico','produtos'];
+const NO_SIDEBAR = ['login','processing','confirmacao','sucesso'];
 
-function goStep(s) {
-  ORDER.forEach(sc => document.getElementById('screen-' + sc).classList.remove('active'));
+function navTo(s) {
+  SCREENS.forEach(sc => document.getElementById('screen-' + sc).classList.remove('active'));
   document.getElementById('screen-' + s).classList.add('active');
-  updateSteps(s);
-
-  if (s === 'processing') {
-    animateTranscript();
-  }
+  closeSB();
+  updateTabHighlight(s);
+  if (s === 'processing') animateTranscript();
   if (s === 'confirmacao') {
     const now = new Date();
     document.getElementById('tsLabel').textContent =
@@ -348,33 +538,29 @@ function goStep(s) {
     document.getElementById('sucMeta').textContent =
       now.toLocaleDateString('pt-BR') + ' às ' +
       now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-    const q = parseInt(document.getElementById('qtyVal')?.value || 10);
-    document.getElementById('sucQty').textContent = q + ' un';
+    document.getElementById('sucQty').textContent =
+      (parseInt(document.getElementById('qtyVal')?.value) || 10) + ' un';
   }
 }
 
-function updateSteps(active) {
-  const idx = ORDER.indexOf(active);
-  for (let i = 1; i <= 4; i++) {
-    const dot = document.getElementById('sd' + i);
-    const label = document.getElementById('sl' + i);
-    dot.classList.remove('done', 'active');
-    label.classList.remove('done', 'active');
-    if (i - 1 < idx) {
-      dot.classList.add('done');
-      label.classList.add('done');
-      dot.innerHTML = '✓';
-    } else if (i - 1 === idx) {
-      dot.classList.add('active');
-      label.classList.add('active');
-      dot.textContent = i;
-    } else {
-      dot.textContent = i;
-    }
+function updateTabHighlight(s) {
+  const map = { dashboard: 0, historico: 1, produtos: 2 };
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+}
+
+function toggleSB(ctx) {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('open');
+  document.querySelectorAll('.ni').forEach(n => n.classList.remove('active'));
+  if (ctx) {
+    const el = document.getElementById('sbn-' + ctx);
+    if (el) el.classList.add('active');
   }
-  for (let i = 1; i <= 3; i++) {
-    document.getElementById('line' + i).classList.toggle('done', i <= idx);
-  }
+}
+
+function closeSB() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
 }
 
 let recording = false, recInterval = null, recSecs = 0;
@@ -388,7 +574,6 @@ function toggleRec() {
     document.getElementById('micStatus').classList.add('rec');
     document.getElementById('waveBars').classList.remove('hidden');
     document.getElementById('stopHint').textContent = 'Toque novamente para encerrar';
-    document.getElementById('voiceHint').style.opacity = '0.4';
     recSecs = 0;
     document.getElementById('micTimer').textContent = '0:00';
     recInterval = setInterval(() => {
@@ -413,12 +598,10 @@ function stopAndProcess() {
   document.getElementById('waveBars').classList.add('hidden');
   document.getElementById('stopHint').textContent = '';
   document.getElementById('micTimer').textContent = '';
-  document.getElementById('voiceHint').style.opacity = '1';
-  setTimeout(() => goStep('processing'), 500);
+  setTimeout(() => navTo('processing'), 500);
 }
 
 const FULL_TEXT = '"Luva cirúrgica tamanho pequeno, dez unidades"';
-
 function animateTranscript() {
   const el = document.getElementById('transcriptAnim');
   el.textContent = '';
@@ -428,7 +611,7 @@ function animateTranscript() {
     i++;
     if (i >= FULL_TEXT.length) {
       clearInterval(iv);
-      setTimeout(() => goStep('confirmacao'), 1200);
+      setTimeout(() => navTo('confirmacao'), 1200);
     }
   }, 38);
 }
