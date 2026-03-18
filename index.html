@@ -108,19 +108,19 @@ body {
 .sidebar {
   position: absolute;
   top: 0;
-  left: -240px;
+  right: -240px;
   width: 240px;
   height: 100%;
   background: #fff;
-  border-right: 1px solid #e8f0ea;
+  border-left: 1px solid #e8f0ea;
   z-index: 20;
-  transition: left 0.22s ease;
+  transition: right 0.22s ease;
   display: flex;
   flex-direction: column
 }
 
 .sidebar.open {
-  left: 0
+  right: 0
 }
 
 .overlay {
